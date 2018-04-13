@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using IisAdmin;
 using IisManagement.Shared;
 using NLog;
 
 namespace IisManagement.Server.Worker
 {
-    public class CreateWebsite : IWorker<CreateWebsiteRequest, DefaultResult>
+    public class DeleteWebsite : IWorker<DeleteWebsiteRequest, DefaultResult>
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private IisSite _currentSite;
-        public DefaultResult ReceiveAndSendMessage(CreateWebsiteRequest message)
+        public DefaultResult ReceiveAndSendMessage(DeleteWebsiteRequest message)
         {
             try
             {
@@ -23,7 +19,7 @@ namespace IisManagement.Server.Worker
                 ChangeWebsite();
                 CopyContents();
                 Logger.Info("Finished CreateWebsite");
-                return new DefaultResult{Success = true};
+                return new DefaultResult { Success = true };
             }
             catch (Exception e)
             {
@@ -35,17 +31,17 @@ namespace IisManagement.Server.Worker
 
         private void CopyContents()
         {
-            
+
         }
 
         private void ChangeWebsite()
         {
-          
+
         }
 
         private void ManipulateHostsFile()
         {
-            ServerHostsFile.AddSite(_currentSite);
+            ServerHostsFile.RemoveSite(_currentSite);
             ServerHostsFile.RemoveDuplicateEmptyHostEntries();
         }
     }

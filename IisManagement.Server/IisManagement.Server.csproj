@@ -243,6 +243,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Worker\DeleteWebsite.cs" />
     <Compile Include="Worker\Envelope.cs" />
     <Compile Include="Worker\IWorker.cs" />
     <Compile Include="Worker\MessageConverter.cs" />
