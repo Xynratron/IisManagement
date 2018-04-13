@@ -77,6 +77,7 @@ namespace IisAdmin
             {
                 site.Bindings.Remove(binding);
             }
+
             
             bool mx1 = (newSite.AppKind == IisSiteApplicationKind.Mx1);
             
