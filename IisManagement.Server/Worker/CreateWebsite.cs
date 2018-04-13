@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IisAdmin;
@@ -50,8 +51,31 @@ namespace IisManagement.Server.Worker
             CreateOrChangeWebsite();
             CreateOrChangeAppPool();
             CreateOrChangeVirtualPicturesDirectory();
-
+            AddOrChangeBindings();
             RemoveOldDirectory();
+        }
+
+        private void AddOrChangeBindings()
+        {
+            //Add Bindings
+            foreach (var domain in CurrentSite.Domains.Select(o => o.ToLowerInvariant()))
+            {
+                if (!_site.Bindings.Any(o => string.Equals(o.Host, domain, StringComparison.InvariantCultureIgnoreCase)))
+                    _site.Bindings.Add("*:80:" + domain, "http");
+            }
+            var bindingRemoverList = new List<Binding>();
+            //Remove obsolete Bindings
+            foreach (var binding in _site.Bindings)
+            {
+                if (!CurrentSite.Domains.Any(o => o.Equals(binding.Host, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    bindingRemoverList.Add(binding);
+                }
+            }
+            foreach (var binding in bindingRemoverList)
+            {
+                _site.Bindings.Remove(binding);
+            }
         }
 
         private void RemoveOldDirectory()

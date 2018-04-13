@@ -16,17 +16,17 @@ namespace IisManagement.Client.Console
         {
             try
             {
-                var message = new DeleteWebsiteRequest
+                var message = new CreateWebsiteRequest
                 {
                     SiteInformation = new IisSite
                     {
                         Group = "MX2",
                         SiteName = "Borbet-B2B", 
-                        Domains = new List<string>(new [] {"borbet.mx-live.com", "www.borbet.mx-live.com", "www.brrrorbet.mx-live.com" }),
+                        Domains = new List<string>(new [] {"borbet.mx-live.com", "www.borbet.mx-live.com" }),
                         Version = "1.0.134"
                     }
                 };
-                var result = Communication.SendMessageToServer<DefaultResult, DeleteWebsiteRequest>(message);
+                var result = Communication.SendMessageToServer<DefaultResult, CreateWebsiteRequest>(message);
             }
             catch (Exception e)
             {
