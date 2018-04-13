@@ -17,7 +17,7 @@ namespace IisManagement.Client.Console
             try
             {
                 var message = new CreateWebsiteRequest();
-                var result = Communication.SendMessageToServer< CreateWebsiteResult, CreateWebsiteRequest>(message);
+                var result = Communication.SendMessageToServer<DefaultResult, CreateWebsiteRequest>(message);
             }
             catch (Exception e)
             {

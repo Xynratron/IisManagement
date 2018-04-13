@@ -7,12 +7,12 @@ using IisManagement.Shared;
 
 namespace IisManagement.Server.Worker
 {
-    public class CreateWebsite : IWorker<CreateWebsiteRequest, CreateWebsiteResult>
+    public class CreateWebsite : IWorker<CreateWebsiteRequest, DefaultResult>
     {
-        public CreateWebsiteResult ReceiveAndSendMessage(CreateWebsiteRequest message)
+        public DefaultResult ReceiveAndSendMessage(CreateWebsiteRequest message)
         {
 
-            return new CreateWebsiteResult();
+            return new DefaultResult();
         }
     }
 }
