@@ -88,12 +88,45 @@ namespace IisManagement.Server.Worker
 
         private void CreateOrChangeVirtualPicturesDirectory()
         {
+            var app = _site.Applications[0];
+            var virt = app.VirtualDirectories.FirstOrDefault(o => o.Path.Equals("/Pictures", StringComparison.OrdinalIgnoreCase));
 
+            if (CurrentSite.AddPictures)
+            {
+                if (CurrentSite.LocalPictures)
+                {
+                    app.VirtualDirectories.Add("/Pictures", @"P:\\Pictures");
+                }
+                else
+                {
+                    var vdir = app.VirtualDirectories.Add("/Pictures", @"\\sc00\Images_Neu");
+                    vdir.UserName = ServerSettings.Pictures.Username;
+                    vdir.Password = ServerSettings.Pictures.Password;
+                }
+            }
+            else
+            {
+                if (virt != null)
+                {
+                    app.VirtualDirectories.Remove(virt);
+                }
+            }
         }
 
         private void CreateOrChangeAppPool()
         {
-
+            //Check Apppool
+            if (!ServerManager.ApplicationPools.Any(o => o.Name.Equals(CurrentSite.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                ServerManager.ApplicationPools.Add(CurrentSite.Name);
+                //Create Appool                
+                var apppool = ServerManager.ApplicationPools[CurrentSite.Name];
+                apppool.ManagedRuntimeVersion = "v4.0";
+                apppool.ManagedPipelineMode = ManagedPipelineMode.Integrated;
+                apppool.ProcessModel.IdentityType = ProcessModelIdentityType.NetworkService;
+                apppool.Recycling.PeriodicRestart.Time = TimeSpan.FromSeconds(0);
+                apppool.Recycling.PeriodicRestart.Schedule.Add(TimeSpan.FromHours(1));
+            }
         }
 
         private Site _site;
