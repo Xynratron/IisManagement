@@ -254,6 +254,7 @@
     <Compile Include="ServerSettings.cs" />
     <Compile Include="Worker\CreateWebsite.cs" />
     <Compile Include="Worker\Old\ServerHostsFile.cs" />
+    <Compile Include="Worker\SiteManagement.cs" />
     <Compile Include="Worker\WorkDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
