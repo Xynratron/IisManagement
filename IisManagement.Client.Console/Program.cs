@@ -21,7 +21,7 @@ namespace IisManagement.Client.Console
                     SiteInformation = new IisSite
                     {
                         Group = "MX2", SiteName = "Borbet-B2B", 
-                        Domains = new List<string>(new [] {"borbet.mx-live.com", "www.borbet.mx-live.com"})
+                        Domains = new List<string>(new [] {"borbet.mx-live.com", "www.borbet.mx-live.com", "www.brrrorbet.mx-live.com" })
                     }
                 };
                 var result = Communication.SendMessageToServer<DefaultResult, CreateWebsiteRequest>(message);

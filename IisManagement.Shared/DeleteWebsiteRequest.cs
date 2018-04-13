@@ -1,8 +1,10 @@
-﻿namespace IisManagement.Shared
+﻿using System.Collections.Generic;
+
+namespace IisManagement.Shared
 {
     public class DeleteWebsiteRequest
     {
-        public string Name { get; set; }
         public bool KeepLocalFiles { get; set; }
+        public IisSite SiteInformation { get; set; }
     }
 }

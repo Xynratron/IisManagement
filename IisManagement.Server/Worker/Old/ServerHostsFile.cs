@@ -23,25 +23,40 @@ namespace IisAdmin
 
             //Check Default Entries.
             string marker = "Server Default";
-
-            CheckHostsForDomains(hosts, ServerHostsDefaultEntries, marker);
             
+            RemoveDomains(hosts, ServerHostsDefaultEntries, marker);
+            AddEntries(hosts, ServerHostsDefaultEntries, marker);
+
             File.WriteAllLines(Path.Combine(Environment.SystemDirectory, "drivers", "etc", "hosts"), hosts);
         }
 
-        public static void CheckHostsFile(IisSite newSite)
+        public static void AddSite(IisSite newSite)
         {
             CheckHostsFileForDefaultEntries();
 
             var hosts = File.ReadAllLines(Path.Combine(Environment.SystemDirectory, "drivers", "etc", "hosts")).ToList();
           
-            //Check Default Entries.
             string marker = string.Format("{0} - {1}", newSite.SiteName, newSite.Group);
             
-            var domainEntries = newSite.Domains.Select(o => $"127.0.0.1\t{o}").ToList();
+            var domainEntries = newSite.Domains.Where(o => !string.IsNullOrWhiteSpace(o)).Select(o => $"127.0.0.1\t{o}").ToList();
 
-            CheckHostsForDomains(hosts, domainEntries, marker);
+            RemoveDomains(hosts, domainEntries, marker);
+            AddEntries(hosts, domainEntries, marker);
 
+
+            File.WriteAllLines(Path.Combine(Environment.SystemDirectory, "drivers", "etc", "hosts"), hosts);
+        }
+
+        public static void RemoveSite(IisSite newSite)
+        {
+            var hosts = File.ReadAllLines(Path.Combine(Environment.SystemDirectory, "drivers", "etc", "hosts")).ToList();
+
+            string marker = string.Format("{0} - {1}", newSite.SiteName, newSite.Group);
+
+            var domainEntries = newSite.Domains.Where(o => !string.IsNullOrWhiteSpace(o)).Select(o => $"127.0.0.1\t{o}").ToList();
+
+            RemoveDomains(hosts, domainEntries, marker);
+            
             File.WriteAllLines(Path.Combine(Environment.SystemDirectory, "drivers", "etc", "hosts"), hosts);
         }
 
@@ -62,15 +77,14 @@ namespace IisAdmin
             File.WriteAllLines(Path.Combine(Environment.SystemDirectory, "drivers", "etc", "hosts"), hosts);
         }
 
-        private static void CheckHostsForDomains(List<string> hosts, List<string> domainentries, string marker)
+        private static void RemoveDomains(List<string> hosts, List<string> domainentries, string marker)
         {
             var start = hosts.IndexOf(GetStartMarker(marker));
             var ende = hosts.IndexOf(GetEndMarker(marker));
 
             if (start == -1)
             {
-                RemoveFromHosts(hosts, domainentries, ende);                
-                AddEntries(hosts, domainentries, marker);                
+                RemoveFromHosts(hosts, domainentries, ende);            
             }
             else
             {
@@ -82,8 +96,6 @@ namespace IisAdmin
                 {
                     RemoveFromHosts(hosts, domainentries, start);
                 }
-
-                AddEntries(hosts, domainentries, marker);                
             }
         }
 
