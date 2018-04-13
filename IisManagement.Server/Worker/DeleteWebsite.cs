@@ -31,15 +31,32 @@ namespace IisManagement.Server.Worker
 
         private void ChangeWebsite()
         {
+            RemoveSiteFromIis();
 
+            ServerManager.CommitChanges();
             RemoveSiteDirectory();
+        }
+
+
+        private string previousSitePath;
+        private void RemoveSiteFromIis()
+        {
+            var site = GetWebsite();
+            if (site != null)
+            {
+                previousSitePath = site.Applications["/"].VirtualDirectories["/"].PhysicalPath;
+                ServerManager.Sites.Remove(site);
+            }
         }
 
         private void RemoveSiteDirectory()
         {
             var sitepath = GetSitePath();
-            if (!Directory.Exists(sitepath))
+            if (Directory.Exists(sitepath))
                 Directory.Delete(sitepath, true);
+            if (Directory.Exists(previousSitePath))
+                Directory.Delete(previousSitePath, true);
+            
         }
 
         private void ManipulateHostsFile()

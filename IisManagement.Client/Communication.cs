@@ -67,7 +67,7 @@ namespace IisManagement.Client
         {
             Logger.Info("Sending new Message To Server");
             var t = SendMessageToServerAsync(message);
-            var success = t.Wait(30000);
+            var success = t.Wait(120000);
             if (!success)
             {
                 Logger.Fatal("Connection to Server Timed Out");

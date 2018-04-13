@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IisAdmin;
 using IisManagement.Shared;
+using Microsoft.Web.Administration;
 using NLog;
 
 namespace IisManagement.Server.Worker
@@ -22,6 +23,7 @@ namespace IisManagement.Server.Worker
                 ManipulateHostsFile();
                 ChangeWebsite();
                 CopyContents();
+                ServerManager.CommitChanges();
                 Logger.Info("Finished CreateWebsite");
                 return new DefaultResult{Success = true};
             }
@@ -35,7 +37,11 @@ namespace IisManagement.Server.Worker
 
         private void CopyContents()
         {
-            
+            if (_previousSitePath != GetSitePath())
+            {
+                //??
+                //Copy from Version is better
+            }
         }
 
         private void ChangeWebsite()
@@ -44,6 +50,16 @@ namespace IisManagement.Server.Worker
             CreateOrChangeWebsite();
             CreateOrChangeAppPool();
             CreateOrChangeVirtualPicturesDirectory();
+
+            RemoveOldDirectory();
+        }
+
+        private void RemoveOldDirectory()
+        {
+            if (string.IsNullOrWhiteSpace(_previousSitePath))
+                return;
+            if (!Directory.Exists(_previousSitePath))
+                Directory.CreateDirectory(_previousSitePath);
         }
 
         private void CreateOrChangeVirtualPicturesDirectory()
@@ -56,9 +72,18 @@ namespace IisManagement.Server.Worker
 
         }
 
+        private Site _site;
+        private string _previousSitePath;
         private void CreateOrChangeWebsite()
         {
-
+            _site = GetWebsite();
+            if (_site == null)
+                _site = ServerManager.Sites.Add(SiteName(), "http", "*:80:" + CurrentSite.Domains[0], GetSitePath());
+            else
+            {
+                _previousSitePath = _site.Applications["/"].VirtualDirectories["/"].PhysicalPath;
+                _site.Applications["/"].VirtualDirectories["/"].PhysicalPath = GetSitePath();
+            }
         }
 
         private void EnsureSiteDirecory()

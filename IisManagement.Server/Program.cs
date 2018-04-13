@@ -5,6 +5,7 @@ using System.Linq;
 using IisManagement.Server.Worker;
 using Topshelf;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Web.Administration;
 
 namespace IisManagement.Server
 {
