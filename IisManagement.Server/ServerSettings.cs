@@ -2,6 +2,10 @@
 {
     public class ServerSettings
     {
-        public static int Port => 8007;
+        public static int Port { get; set; }
+
+        public static string BasePath { get; set; }
+
+       
     }
 }
