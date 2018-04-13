@@ -16,7 +16,14 @@ namespace IisManagement.Client.Console
         {
             try
             {
-                var message = new CreateWebsiteRequest();
+                var message = new CreateWebsiteRequest
+                {
+                    SiteInformation = new IisSite
+                    {
+                        Group = "MX2", SiteName = "Borbet-B2B", 
+                        Domains = new List<string>(new [] {"borbet.mx-live.com", "www.borbet.mx-live.com"})
+                    }
+                };
                 var result = Communication.SendMessageToServer<DefaultResult, CreateWebsiteRequest>(message);
             }
             catch (Exception e)
