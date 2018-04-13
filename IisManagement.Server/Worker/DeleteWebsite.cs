@@ -1,23 +1,22 @@
 using System;
+using System.IO;
 using IisAdmin;
 using IisManagement.Shared;
 using NLog;
 
 namespace IisManagement.Server.Worker
 {
-    public class DeleteWebsite : IWorker<DeleteWebsiteRequest, DefaultResult>
+    public class DeleteWebsite : SiteManagement, IWorker<DeleteWebsiteRequest, DefaultResult>
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private IisSite _currentSite;
         public DefaultResult ReceiveAndSendMessage(DeleteWebsiteRequest message)
         {
             try
             {
                 Logger.Info("Starting CreateWebsite");
-                _currentSite = message.SiteInformation;
+                CurrentSite = message.SiteInformation;
                 ManipulateHostsFile();
                 ChangeWebsite();
-                CopyContents();
                 Logger.Info("Finished CreateWebsite");
                 return new DefaultResult { Success = true };
             }
@@ -29,19 +28,23 @@ namespace IisManagement.Server.Worker
             return new DefaultResult { Success = false };
         }
 
-        private void CopyContents()
-        {
-
-        }
 
         private void ChangeWebsite()
         {
 
+            RemoveSiteDirectory();
+        }
+
+        private void RemoveSiteDirectory()
+        {
+            var sitepath = GetSitePath();
+            if (!Directory.Exists(sitepath))
+                Directory.Delete(sitepath, true);
         }
 
         private void ManipulateHostsFile()
         {
-            ServerHostsFile.RemoveSite(_currentSite);
+            ServerHostsFile.RemoveSite(CurrentSite);
             ServerHostsFile.RemoveDuplicateEmptyHostEntries();
         }
     }

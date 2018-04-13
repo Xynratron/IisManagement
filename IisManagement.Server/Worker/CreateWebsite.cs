@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using IisAdmin;
@@ -9,16 +9,16 @@ using NLog;
 
 namespace IisManagement.Server.Worker
 {
-    public class CreateWebsite : IWorker<CreateWebsiteRequest, DefaultResult>
+    public class CreateWebsite : SiteManagement, IWorker<CreateWebsiteRequest, DefaultResult>
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private IisSite _currentSite;
+        
         public DefaultResult ReceiveAndSendMessage(CreateWebsiteRequest message)
         {
             try
             {
                 Logger.Info("Starting CreateWebsite");
-                _currentSite = message.SiteInformation;
+                CurrentSite = message.SiteInformation;
                 ManipulateHostsFile();
                 ChangeWebsite();
                 CopyContents();
@@ -40,12 +40,38 @@ namespace IisManagement.Server.Worker
 
         private void ChangeWebsite()
         {
-          
+            EnsureSiteDirecory();
+            CreateOrChangeWebsite();
+            CreateOrChangeAppPool();
+            CreateOrChangeVirtualPicturesDirectory();
         }
 
+        private void CreateOrChangeVirtualPicturesDirectory()
+        {
+
+        }
+
+        private void CreateOrChangeAppPool()
+        {
+
+        }
+
+        private void CreateOrChangeWebsite()
+        {
+
+        }
+
+        private void EnsureSiteDirecory()
+        {
+            var sitepath = GetSitePath();
+            if (!Directory.Exists(sitepath))
+                Directory.CreateDirectory(sitepath);
+        }
+
+        
         private void ManipulateHostsFile()
         {
-            ServerHostsFile.AddSite(_currentSite);
+            ServerHostsFile.AddSite(CurrentSite);
             ServerHostsFile.RemoveDuplicateEmptyHostEntries();
         }
     }
