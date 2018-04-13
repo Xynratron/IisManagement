@@ -1,6 +1,6 @@
 ﻿namespace IisManagement.Shared
 {
-    public class CreateWebsiteResult
+    public class DefaultResult
     {
         public bool Success { get; set; }
     }
