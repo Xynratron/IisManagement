@@ -182,7 +182,7 @@ namespace IisManagement.Server.Worker
             apppool.Recycling.PeriodicRestart.Time = TimeSpan.FromSeconds(0);
             apppool.Recycling.PeriodicRestart.Schedule.Clear();
             apppool.Recycling.PeriodicRestart.Schedule.Add(TimeSpan.FromHours(1));
-
+            
             Logger.Info($"Settings Pool for Website-Application");
             app.ApplicationPoolName = SiteName();
         }
