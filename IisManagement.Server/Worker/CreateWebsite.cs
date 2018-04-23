@@ -44,7 +44,7 @@ namespace IisManagement.Server.Worker
 
         private void CopyContents()
         {
-            if (_previousSitePath != GetSitePath())
+            if (_previousSitePath != GetSitePath() && !string.IsNullOrWhiteSpace(_previousSitePath))
             {
                 Logger.Info("New Version of Site due to Path-Change detected");
 
@@ -57,12 +57,10 @@ namespace IisManagement.Server.Worker
                     Logger.Info($"Could not Find New Version of Site");
 
                     Directory.CreateDirectory(GetDeploymentPath());
-
-                    if (!string.IsNullOrWhiteSpace(_previousSitePath))
-                    {
-                        Logger.Info($"Copy Old Site to Deployment as initial Version");
-                        CopyFilesRecursively(_previousSitePath, GetDeploymentPath());
-                    }
+                    
+                    Logger.Info($"Copy Old Site to Deployment as initial Version");
+                    CopyFilesRecursively(_previousSitePath, GetDeploymentPath());
+                    
                 }
                 Logger.Info($"Copy Site from Deployment to local");
                 CopyFilesRecursively(GetDeploymentPath(), GetSitePath());
