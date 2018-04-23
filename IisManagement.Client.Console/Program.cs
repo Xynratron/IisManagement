@@ -22,8 +22,9 @@ namespace IisManagement.Client.Console
                     {
                         Group = "MX2",
                         SiteName = "Borbet-B2B", 
-                        Domains = new List<string>(new [] {"borbet.mx-live.com", "www.borbet.mx-live.com" }),
-                        Version = "1.0.134"
+                        Domains = new List<string>(new [] {"borbet.mx-live.com", "www.borbet.mx-live.com" , "shop.borbet.com" }),
+                        Version = "1.0.135",
+                        AddPictures = true
                     }
                 };
                 var result = Communication.SendMessageToServer<DefaultResult, CreateWebsiteRequest>(message);

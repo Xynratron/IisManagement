@@ -10,6 +10,7 @@ namespace IisManagement.Server
         public static string BasePath { get; set; }
         
         public static Pictures Pictures { get; set; }
+        public static Deployment Deployment { get; set; }
     }
     public class Pictures
     {

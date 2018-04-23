@@ -21,11 +21,16 @@ namespace IisManagement.Server.Worker
             {
                 Logger.Info("Starting CreateWebsite");
                 CurrentSite = message.SiteInformation;
+                Logger.Info($"Manipulating Hosts File");
                 ManipulateHostsFile();
+                Logger.Info($"Changing Website");
                 ChangeWebsite();
+                Logger.Info($"Copy Website Contents");
                 CopyContents();
-                RemoveOldDirectory();
+                Logger.Info($"Commiting all Changes");
                 ServerManager.CommitChanges();
+                Logger.Info($"Deleting old Directory");
+                RemoveOldDirectory();
                 Logger.Info("Finished CreateWebsite");
                 return new DefaultResult{Success = true};
             }
@@ -61,12 +66,14 @@ namespace IisManagement.Server.Worker
                 }
                 Logger.Info($"Copy Site from Deployment to local");
                 CopyFilesRecursively(GetDeploymentPath(), GetSitePath());
+                Logger.Info($"Finished Copy Site");
             }
         }
 
-
         private void CopyFilesRecursively(string sourceDirectory, string targetDirectory)
         {
+            Logger.Info($"Copy Files from {sourceDirectory} to {targetDirectory}");
+
             if (Directory.Exists(targetDirectory))
                 Directory.CreateDirectory(targetDirectory);
 
@@ -91,24 +98,24 @@ namespace IisManagement.Server.Worker
 
         private void AddOrChangeBindings()
         {
+            Logger.Info($"Adding Binding information");
             //Add Bindings
             foreach (var domain in CurrentSite.Domains.Select(o => o.ToLowerInvariant()))
             {
+                Logger.Info($"Domain: {domain}");
                 if (!_site.Bindings.Any(o => string.Equals(o.Host, domain, StringComparison.InvariantCultureIgnoreCase)))
                     _site.Bindings.Add("*:80:" + domain, "http");
             }
             var bindingRemoverList = new List<Binding>();
             //Remove obsolete Bindings
-            foreach (var binding in _site.Bindings)
+            foreach (var binding in _site.Bindings.ToList())
             {
+                Logger.Info($"Searching for Bindings to be removed");
                 if (!CurrentSite.Domains.Any(o => o.Equals(binding.Host, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    bindingRemoverList.Add(binding);
+                    Logger.Info($"binding: {binding}");
+                    _site.Bindings.Remove(binding);
                 }
-            }
-            foreach (var binding in bindingRemoverList)
-            {
-                _site.Bindings.Remove(binding);
             }
         }
 
@@ -116,29 +123,33 @@ namespace IisManagement.Server.Worker
         {
             if (string.IsNullOrWhiteSpace(_previousSitePath))
                 return;
-            if (!Directory.Exists(_previousSitePath))
-                Directory.CreateDirectory(_previousSitePath);
+            if (Directory.Exists(_previousSitePath))
+                Directory.Delete(_previousSitePath);
         }
 
         private void CreateOrChangeVirtualPicturesDirectory()
         {
+            Logger.Info($"Checking Virtual Pictures Folders");
             var app = _site.Applications[0];
             
             var virt = app.VirtualDirectories.FirstOrDefault(o => o.Path.Equals("/Pictures", StringComparison.OrdinalIgnoreCase));
             if (virt != null)
             {
+                Logger.Info($"Remove the existing Virtual Directory");
                 app.VirtualDirectories.Remove(virt);
             }
 
             if (CurrentSite.AddPictures)
             {
-                app.VirtualDirectories.Clear();
+                Logger.Info($"Adding new Virtual Directory");
                 if (CurrentSite.LocalPictures)
                 {
+                    Logger.Info($"As Local Pictures");
                     app.VirtualDirectories.Add("/Pictures", @"P:\\Pictures");
                 }
                 else
                 {
+                    Logger.Info($"As Server Pictures");
                     var vdir = app.VirtualDirectories.Add("/Pictures", @"\\sc00\Images_Neu");
                     vdir.UserName = ServerSettings.Pictures.Username;
                     vdir.Password = ServerSettings.Pictures.Password;
@@ -148,6 +159,7 @@ namespace IisManagement.Server.Worker
 
         private void CreateOrChangeAppPool()
         {
+            Logger.Info($"Checking Application Pool");
             var app = _site.Applications[0];
 
             ApplicationPool apppool = null;
@@ -155,12 +167,16 @@ namespace IisManagement.Server.Worker
 
             if (_siteIsNew || renameAppPoool)
             {
+                Logger.Info($"Adding a new Pool");
                 apppool = ServerManager.ApplicationPools.Add(SiteName());
             }
             else
             {
+                Logger.Info($"Using existing Pool");
                 apppool = ServerManager.ApplicationPools[app.ApplicationPoolName];
             }
+
+            Logger.Info($"Settings the default values");
 
             apppool.ManagedRuntimeVersion = "v4.0";
             apppool.ManagedPipelineMode = ManagedPipelineMode.Integrated;
@@ -168,6 +184,8 @@ namespace IisManagement.Server.Worker
             apppool.Recycling.PeriodicRestart.Time = TimeSpan.FromSeconds(0);
             apppool.Recycling.PeriodicRestart.Schedule.Clear();
             apppool.Recycling.PeriodicRestart.Schedule.Add(TimeSpan.FromHours(1));
+
+            Logger.Info($"Settings Pool for Website-Application");
             app.ApplicationPoolName = SiteName();
         }
 
@@ -176,17 +194,24 @@ namespace IisManagement.Server.Worker
         private bool _siteIsNew = false;
         private void CreateOrChangeWebsite()
         {
+            Logger.Info($"Searching for Website {SiteName()}");
             _site = GetWebsite();
             if (_site == null)
             {
+                Logger.Info($"Adding Website {SiteName()}");
+                Logger.Info($"For Domain {CurrentSite.Domains[0]}");
+                Logger.Info($"With Path {GetSitePath()}");
                 _site = ServerManager.Sites.Add(SiteName(), "http", "*:80:" + CurrentSite.Domains[0], GetSitePath());
                 _siteIsNew = true;
             }
             else
             {
+                Logger.Info($"Website allready exists");
+                Logger.Info($"Searching for physical Path");
                 _previousSitePath = _site.Applications["/"].VirtualDirectories["/"].PhysicalPath;
-                _site.Applications["/"].VirtualDirectories["/"].PhysicalPath = GetSitePath();
+                Logger.Info($"Physical Path is {_previousSitePath}");
             }
+            _site.Applications["/"].VirtualDirectories["/"].PhysicalPath = GetSitePath();
         }
 
         private void EnsureSiteDirecory()
