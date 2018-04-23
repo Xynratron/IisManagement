@@ -39,7 +39,45 @@ namespace IisManagement.Server.Worker
 
         private void CopyContents()
         {
-            
+            if (_previousSitePath != GetSitePath())
+            {
+                Logger.Info("New Version of Site due to Path-Change detected");
+
+                Logger.Info($"Old Path: {_previousSitePath}");
+                Logger.Info($"New Path: {GetSitePath()}");
+                Logger.Info($"Searching for new New Version at Deployment Location {GetDeploymentPath()}");
+
+                if (!Directory.Exists(GetDeploymentPath()))
+                {
+                    Logger.Info($"Could not Find New Version of Site");
+
+                    Directory.CreateDirectory(GetDeploymentPath());
+
+                    if (!string.IsNullOrWhiteSpace(_previousSitePath))
+                    {
+                        Logger.Info($"Copy Old Site to Deployment as initial Version");
+                        CopyFilesRecursively(_previousSitePath, GetDeploymentPath());
+                    }
+                }
+                Logger.Info($"Copy Site from Deployment to local");
+                CopyFilesRecursively(GetDeploymentPath(), GetSitePath());
+            }
+        }
+
+
+        private void CopyFilesRecursively(string sourceDirectory, string targetDirectory)
+        {
+            if (Directory.Exists(targetDirectory))
+                Directory.CreateDirectory(targetDirectory);
+
+            CopyFilesRecursively(new DirectoryInfo(sourceDirectory), new DirectoryInfo(targetDirectory));
+        }
+        private void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target)
+        {
+            foreach (var dir in source.GetDirectories())
+                CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
+            foreach (var file in source.GetFiles())
+                file.CopyTo(Path.Combine(target.FullName, file.Name));
         }
 
         private void ChangeWebsite()
