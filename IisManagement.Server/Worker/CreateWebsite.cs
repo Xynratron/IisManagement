@@ -24,6 +24,7 @@ namespace IisManagement.Server.Worker
                 ManipulateHostsFile();
                 ChangeWebsite();
                 CopyContents();
+                RemoveOldDirectory();
                 ServerManager.CommitChanges();
                 Logger.Info("Finished CreateWebsite");
                 return new DefaultResult{Success = true};
@@ -38,11 +39,7 @@ namespace IisManagement.Server.Worker
 
         private void CopyContents()
         {
-            if (_previousSitePath != GetSitePath())
-            {
-                //??
-                //Copy from Version is better
-            }
+            
         }
 
         private void ChangeWebsite()
@@ -52,7 +49,6 @@ namespace IisManagement.Server.Worker
             CreateOrChangeAppPool();
             CreateOrChangeVirtualPicturesDirectory();
             AddOrChangeBindings();
-            RemoveOldDirectory();
         }
 
         private void AddOrChangeBindings()
@@ -89,10 +85,16 @@ namespace IisManagement.Server.Worker
         private void CreateOrChangeVirtualPicturesDirectory()
         {
             var app = _site.Applications[0];
+            
             var virt = app.VirtualDirectories.FirstOrDefault(o => o.Path.Equals("/Pictures", StringComparison.OrdinalIgnoreCase));
+            if (virt != null)
+            {
+                app.VirtualDirectories.Remove(virt);
+            }
 
             if (CurrentSite.AddPictures)
             {
+                app.VirtualDirectories.Clear();
                 if (CurrentSite.LocalPictures)
                 {
                     app.VirtualDirectories.Add("/Pictures", @"P:\\Pictures");
@@ -104,38 +106,44 @@ namespace IisManagement.Server.Worker
                     vdir.Password = ServerSettings.Pictures.Password;
                 }
             }
-            else
-            {
-                if (virt != null)
-                {
-                    app.VirtualDirectories.Remove(virt);
-                }
-            }
         }
 
         private void CreateOrChangeAppPool()
         {
-            //Check Apppool
-            if (!ServerManager.ApplicationPools.Any(o => o.Name.Equals(CurrentSite.Name, StringComparison.OrdinalIgnoreCase)))
+            var app = _site.Applications[0];
+
+            ApplicationPool apppool = null;
+            var renameAppPoool = app.ApplicationPoolName != SiteName();
+
+            if (_siteIsNew || renameAppPoool)
             {
-                ServerManager.ApplicationPools.Add(CurrentSite.Name);
-                //Create Appool                
-                var apppool = ServerManager.ApplicationPools[CurrentSite.Name];
-                apppool.ManagedRuntimeVersion = "v4.0";
-                apppool.ManagedPipelineMode = ManagedPipelineMode.Integrated;
-                apppool.ProcessModel.IdentityType = ProcessModelIdentityType.NetworkService;
-                apppool.Recycling.PeriodicRestart.Time = TimeSpan.FromSeconds(0);
-                apppool.Recycling.PeriodicRestart.Schedule.Add(TimeSpan.FromHours(1));
+                apppool = ServerManager.ApplicationPools.Add(SiteName());
             }
+            else
+            {
+                apppool = ServerManager.ApplicationPools[app.ApplicationPoolName];
+            }
+
+            apppool.ManagedRuntimeVersion = "v4.0";
+            apppool.ManagedPipelineMode = ManagedPipelineMode.Integrated;
+            apppool.ProcessModel.IdentityType = ProcessModelIdentityType.NetworkService;
+            apppool.Recycling.PeriodicRestart.Time = TimeSpan.FromSeconds(0);
+            apppool.Recycling.PeriodicRestart.Schedule.Clear();
+            apppool.Recycling.PeriodicRestart.Schedule.Add(TimeSpan.FromHours(1));
+            app.ApplicationPoolName = SiteName();
         }
 
         private Site _site;
         private string _previousSitePath;
+        private bool _siteIsNew = false;
         private void CreateOrChangeWebsite()
         {
             _site = GetWebsite();
             if (_site == null)
+            {
                 _site = ServerManager.Sites.Add(SiteName(), "http", "*:80:" + CurrentSite.Domains[0], GetSitePath());
+                _siteIsNew = true;
+            }
             else
             {
                 _previousSitePath = _site.Applications["/"].VirtualDirectories["/"].PhysicalPath;

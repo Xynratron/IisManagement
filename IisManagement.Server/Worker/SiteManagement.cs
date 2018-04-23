@@ -17,7 +17,12 @@ namespace IisManagement.Server.Worker
         }
         protected string GetSitePath()
         {
-            return Path.Combine(ServerSettings.BasePath, CurrentSite.Group, $"{CurrentSite.Name}_{CurrentSite.Version}");
+            return Path.Combine(ServerSettings.BasePath, CurrentSite.Group, $"{CurrentSite.Name} {CurrentSite.Version}");
+        }
+
+        protected string GetDeploymentPath()
+        {
+            return Path.Combine(ServerSettings.BasePath, CurrentSite.Group, CurrentSite.Name, CurrentSite.Version);
         }
 
         protected string SiteName()
