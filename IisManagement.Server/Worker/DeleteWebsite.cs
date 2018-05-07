@@ -10,6 +10,7 @@ namespace IisManagement.Server.Worker
     public class DeleteWebsite : SiteManagement, IWorker<DeleteWebsiteRequest, DefaultResult>
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public DefaultResult ReceiveAndSendMessage(DeleteWebsiteRequest message)
         {
             try
@@ -40,7 +41,7 @@ namespace IisManagement.Server.Worker
             RemoveSiteFromIis();
             Logger.Info("Removing Empty Application Pools");
             RemoveEmptyApplicationPools();
-            Logger.Info("RCommiting Changes");
+            Logger.Info("Commiting Changes");
             ServerManager.CommitChanges();
         }
 
