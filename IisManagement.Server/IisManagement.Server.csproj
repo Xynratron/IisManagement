@@ -248,6 +248,7 @@
     <Compile Include="FileManagement\FileHandling.cs" />
     <Compile Include="FileManagement\NetworkConnection.cs" />
     <Compile Include="Settings\Pictures.cs" />
+    <Compile Include="Worker\ReadServerContentsWorker.cs" />
     <Compile Include="Worker\CreateBackupWorker.cs" />
     <Compile Include="Worker\RenameWebsiteWorker.cs" />
     <Compile Include="Worker\DeleteWebsiteWorker.cs" />
