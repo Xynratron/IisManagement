@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using IisAdmin;
 using IisManagement.Shared;
@@ -69,8 +68,8 @@ namespace IisManagement.Server.Worker
 
         private void RemoveSiteDirectory()
         {
-            if (Directory.Exists(_physicalSitePath))
-                Directory.Delete(_physicalSitePath, true);
+            if (ImpersonatedFiles.Exists(_physicalSitePath))
+                ImpersonatedFiles.Delete(_physicalSitePath, true);
         }
 
         private void ManipulateHostsFile()

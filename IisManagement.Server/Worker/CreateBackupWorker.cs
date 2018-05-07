@@ -1,10 +1,6 @@
 using System;
-using System.IO;
-using System.Linq;
-using IisAdmin;
 using IisManagement.Shared;
 using NLog;
-using Microsoft.Web.Administration;
 
 namespace IisManagement.Server.Worker
 {
@@ -30,16 +26,16 @@ namespace IisManagement.Server.Worker
                 Logger.Info($"Creating Backup at Deployment Location: {backupPath}");
 
 
-                if (!Directory.Exists(backupPath))
+                if (!ImpersonatedFiles.Exists(backupPath))
                 {
                     Logger.Info($"Could not Find New Version of Site");
 
-                    Directory.CreateDirectory(backupPath);
+                    ImpersonatedFiles.CreateDirectory(backupPath);
 
                     Logger.Info($"Copy Old Site to Deployment as initial Version");
                 }
 
-                CopyFilesRecursively(sitePath, backupPath);
+                ImpersonatedFiles.CopyFilesRecursively(sitePath, backupPath);
 
                 Logger.Info("Finished Backup");
                 return new DefaultResult { Success = true };

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using IisAdmin;
 using IisManagement.Shared;
 using Microsoft.Web.Administration;
@@ -52,18 +48,18 @@ namespace IisManagement.Server.Worker
                 Logger.Info($"New Path: {GetSitePath()}");
                 Logger.Info($"Searching for new New Version at Deployment Location {GetDeploymentPath()}");
 
-                if (!Directory.Exists(GetDeploymentPath()))
+                if (!ImpersonatedFiles.Exists(GetDeploymentPath()))
                 {
                     Logger.Info($"Could not Find New Version of Site");
 
-                    Directory.CreateDirectory(GetDeploymentPath());
+                    ImpersonatedFiles.CreateDirectory(GetDeploymentPath());
                     
                     Logger.Info($"Copy Old Site to Deployment as initial Version");
-                    CopyFilesRecursively(_previousSitePath, GetDeploymentPath());
+                    ImpersonatedFiles.CopyFilesRecursively(_previousSitePath, GetDeploymentPath());
                     
                 }
                 Logger.Info($"Copy Site from Deployment to local");
-                CopyFilesRecursively(GetDeploymentPath(), GetSitePath());
+                ImpersonatedFiles.CopyFilesRecursively(GetDeploymentPath(), GetSitePath());
                 Logger.Info($"Finished Copy Site");
             }
         }
@@ -104,8 +100,8 @@ namespace IisManagement.Server.Worker
         {
             if (string.IsNullOrWhiteSpace(_previousSitePath))
                 return;
-            if (Directory.Exists(_previousSitePath))
-                Directory.Delete(_previousSitePath);
+            if (ImpersonatedFiles.Exists(_previousSitePath))
+                ImpersonatedFiles.Delete(_previousSitePath);
         }
 
         private void CreateOrChangeVirtualPicturesDirectory()
@@ -198,8 +194,8 @@ namespace IisManagement.Server.Worker
         private void EnsureSiteDirecory()
         {
             var sitepath = GetSitePath();
-            if (!Directory.Exists(sitepath))
-                Directory.CreateDirectory(sitepath);
+            if (!ImpersonatedFiles.Exists(sitepath))
+                ImpersonatedFiles.CreateDirectory(sitepath);
         }
 
         
