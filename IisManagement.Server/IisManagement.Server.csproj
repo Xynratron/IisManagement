@@ -243,6 +243,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Worker\CreateBackupWorker.cs" />
+    <Compile Include="Worker\RenameWebsite.cs" />
     <Compile Include="Worker\DeleteWebsite.cs" />
     <Compile Include="Worker\Envelope.cs" />
     <Compile Include="Worker\IWorker.cs" />
