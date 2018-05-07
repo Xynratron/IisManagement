@@ -243,9 +243,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Directory.cs" />
-    <Compile Include="FileHandling.cs" />
-    <Compile Include="NetworkConnection.cs" />
+    <Compile Include="FileManagement\Directory.cs" />
+    <Compile Include="FileManagement\FileHandling.cs" />
+    <Compile Include="FileManagement\NetworkConnection.cs" />
     <Compile Include="Worker\CreateBackupWorker.cs" />
     <Compile Include="Worker\RenameWebsite.cs" />
     <Compile Include="Worker\DeleteWebsite.cs" />
