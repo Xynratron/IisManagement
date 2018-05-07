@@ -14,7 +14,7 @@ namespace IisManagement.Server.Worker
     public class CreateWebsite : SiteManagement, IWorker<CreateWebsiteRequest, DefaultResult>
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        
+
         public DefaultResult ReceiveAndSendMessage(CreateWebsiteRequest message)
         {
             try
@@ -68,23 +68,6 @@ namespace IisManagement.Server.Worker
             }
         }
 
-        private void CopyFilesRecursively(string sourceDirectory, string targetDirectory)
-        {
-            Logger.Info($"Copy Files from {sourceDirectory} to {targetDirectory}");
-
-            if (Directory.Exists(targetDirectory))
-                Directory.CreateDirectory(targetDirectory);
-
-            CopyFilesRecursively(new DirectoryInfo(sourceDirectory), new DirectoryInfo(targetDirectory));
-        }
-        private void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target)
-        {
-            foreach (var dir in source.GetDirectories())
-                CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
-            foreach (var file in source.GetFiles())
-                file.CopyTo(Path.Combine(target.FullName, file.Name));
-        }
-
         private void ChangeWebsite()
         {
             EnsureSiteDirecory();
@@ -104,7 +87,7 @@ namespace IisManagement.Server.Worker
                 if (!_site.Bindings.Any(o => string.Equals(o.Host, domain, StringComparison.InvariantCultureIgnoreCase)))
                     _site.Bindings.Add("*:80:" + domain, "http");
             }
-            var bindingRemoverList = new List<Binding>();
+            
             //Remove obsolete Bindings
             foreach (var binding in _site.Bindings.ToList())
             {
