@@ -243,9 +243,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileManagement\Directory.cs" />
+    <Compile Include="Settings\Deployment.cs" />
+    <Compile Include="FileManagement\ImpersonatedFiles.cs" />
     <Compile Include="FileManagement\FileHandling.cs" />
     <Compile Include="FileManagement\NetworkConnection.cs" />
+    <Compile Include="Settings\Pictures.cs" />
     <Compile Include="Worker\CreateBackupWorker.cs" />
     <Compile Include="Worker\RenameWebsite.cs" />
     <Compile Include="Worker\DeleteWebsite.cs" />
@@ -256,9 +258,9 @@
     <Compile Include="NettyServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerSettings.cs" />
+    <Compile Include="Settings\ServerSettings.cs" />
     <Compile Include="Worker\CreateWebsite.cs" />
-    <Compile Include="Worker\Old\ServerHostsFile.cs" />
+    <Compile Include="ServerHostsFile.cs" />
     <Compile Include="Worker\SiteManagement.cs" />
     <Compile Include="Worker\WorkDispatcher.cs" />
   </ItemGroup>

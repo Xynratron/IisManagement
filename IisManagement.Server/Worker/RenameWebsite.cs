@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using IisAdmin;
 using IisManagement.Shared;
 using Microsoft.Web.Administration;
 using NLog;

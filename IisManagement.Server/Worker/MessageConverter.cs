@@ -1,7 +1,6 @@
-﻿using System.Diagnostics;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace IisManagement.Shared
+namespace IisManagement.Server.Worker
 {
     public class MessageConverter
     {

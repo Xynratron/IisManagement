@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using IisManagement.Shared;
 
-namespace IisAdmin
+namespace IisManagement.Server
 {
     public class ServerHostsFile
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace IisManagement.Shared
+namespace IisManagement.Server.Worker
 {
     [DataContract]
     public class Envelope

@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace IisManagement.Server
+namespace IisManagement.Server.FileManagement
 {
     internal static class ImpersonatedFiles
     {

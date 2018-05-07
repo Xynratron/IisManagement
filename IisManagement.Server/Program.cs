@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using IisManagement.Server.Settings;
 using IisManagement.Server.Worker;
 using Topshelf;
 using Microsoft.Extensions.Configuration;

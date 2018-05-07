@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net;
+using IisManagement.Server.Settings;
 using NLog;
 
-namespace IisManagement.Server
+namespace IisManagement.Server.FileManagement
 {
     public class FileHandling : IDisposable
     {

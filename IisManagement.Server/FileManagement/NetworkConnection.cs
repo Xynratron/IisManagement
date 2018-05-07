@@ -3,7 +3,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace IisManagement.Server
+namespace IisManagement.Server.FileManagement
 {
     /// <summary>
     /// Connection to a Network Share with different Credentials. 

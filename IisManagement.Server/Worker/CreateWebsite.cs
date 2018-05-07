@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using IisAdmin;
+using IisManagement.Server.FileManagement;
+using IisManagement.Server.Settings;
 using IisManagement.Shared;
 using Microsoft.Web.Administration;
 using NLog;
