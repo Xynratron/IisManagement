@@ -15,7 +15,7 @@ namespace IisManagement.Server.FileManagement
             if (IsNetworkShare(path))
             {
                 var settings = ServerSettings.Deployment;
-                _networkConnection = new NetworkConnection(System.IO.Path.GetPathRoot(path),
+                _networkConnection = new NetworkConnection(Path.GetPathRoot(path),
                     new NetworkCredential(settings.Username, settings.Password, settings.Domain));
             }
         }

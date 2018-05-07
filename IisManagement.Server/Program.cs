@@ -45,7 +45,7 @@ namespace IisManagement.Server
         private static void InitializeSettings()
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json");
 
             var config = builder.Build();

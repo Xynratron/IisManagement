@@ -4,6 +4,7 @@ using IisManagement.Server.Settings;
 using IisManagement.Shared;
 using Microsoft.Web.Administration;
 using NLog;
+using System.IO;
 
 namespace IisManagement.Server.Worker
 {
@@ -21,13 +22,13 @@ namespace IisManagement.Server.Worker
 
         protected string GetSitePath()
         {
-            return System.IO.Path.Combine(ServerSettings.BasePath, CurrentSite.Group,
+            return Path.Combine(ServerSettings.BasePath, CurrentSite.Group,
                 $"{CurrentSite.Name} - {CurrentSite.Version}");
         }
 
         protected string GetDeploymentPath()
         {
-            return System.IO.Path.Combine(ServerSettings.Deployment.Location, CurrentSite.Group, CurrentSite.Name,
+            return Path.Combine(ServerSettings.Deployment.Location, CurrentSite.Group, CurrentSite.Name,
                 CurrentSite.Version);
         }
 
