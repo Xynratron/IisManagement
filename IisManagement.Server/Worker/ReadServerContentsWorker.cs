@@ -68,7 +68,7 @@ namespace IisManagement.Server.Worker
         {
             var app = site.Applications[0];
             var virt = app.VirtualDirectories.FirstOrDefault(o => o.Path.Equals("/Pictures", StringComparison.OrdinalIgnoreCase));
-            return virt == null;
+            return virt != null;
         }
 
         private List<string> FindDomainsInBindings(Site site)
