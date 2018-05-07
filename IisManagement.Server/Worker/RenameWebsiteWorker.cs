@@ -7,7 +7,7 @@ using NLog;
 
 namespace IisManagement.Server.Worker
 {
-    public class RenameWebsite : SiteManagement, IWorker<RenameWebsiteRequest, DefaultResult>
+    public class RenameWebsiteWorker : SiteManagement, IWorker<RenameWebsiteRequest, DefaultResult>
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public DefaultResult ReceiveAndSendMessage(RenameWebsiteRequest message)

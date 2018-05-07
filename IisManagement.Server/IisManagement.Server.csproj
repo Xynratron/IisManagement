@@ -249,8 +249,8 @@
     <Compile Include="FileManagement\NetworkConnection.cs" />
     <Compile Include="Settings\Pictures.cs" />
     <Compile Include="Worker\CreateBackupWorker.cs" />
-    <Compile Include="Worker\RenameWebsite.cs" />
-    <Compile Include="Worker\DeleteWebsite.cs" />
+    <Compile Include="Worker\RenameWebsiteWorker.cs" />
+    <Compile Include="Worker\DeleteWebsiteWorker.cs" />
     <Compile Include="Worker\Envelope.cs" />
     <Compile Include="Worker\IWorker.cs" />
     <Compile Include="Worker\MessageConverter.cs" />
@@ -259,7 +259,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\ServerSettings.cs" />
-    <Compile Include="Worker\CreateWebsite.cs" />
+    <Compile Include="Worker\CreateWebsiteWorker.cs" />
     <Compile Include="ServerHostsFile.cs" />
     <Compile Include="Worker\SiteManagement.cs" />
     <Compile Include="Worker\WorkDispatcher.cs" />

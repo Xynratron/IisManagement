@@ -8,7 +8,7 @@ using NLog;
 
 namespace IisManagement.Server.Worker
 {
-    public class CreateWebsite : SiteManagement, IWorker<CreateWebsiteRequest, DefaultResult>
+    public class CreateWebsiteWorker : SiteManagement, IWorker<CreateWebsiteRequest, DefaultResult>
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 

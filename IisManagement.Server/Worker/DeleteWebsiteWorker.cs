@@ -6,7 +6,7 @@ using NLog;
 
 namespace IisManagement.Server.Worker
 {
-    public class DeleteWebsite : SiteManagement, IWorker<DeleteWebsiteRequest, DefaultResult>
+    public class DeleteWebsiteWorker : SiteManagement, IWorker<DeleteWebsiteRequest, DefaultResult>
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
