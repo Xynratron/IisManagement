@@ -29,16 +29,30 @@ namespace IisManagement.Client.Console
                 //};
                 //var result = Communication.SendMessageToServer<DefaultResult, CreateWebsiteRequest>(message);
 
-                var result = Communication.SendMessageToServer<DefaultResult, DeleteWebsiteRequest>(new DeleteWebsiteRequest
+                //var result = Communication.SendMessageToServer<DefaultResult, DeleteWebsiteRequest>(new DeleteWebsiteRequest
+                //{
+                //    SiteInformation = new IisSite
+                //    {
+                //        Group = "MX2",
+                //        SiteName = "Borbet-B2B",
+                //        Domains = new List<string>(new[] { "borbet.mx-live.com", "www.borbet.mx-live.com", "shop.borbet.com" }),
+                //    }
+                //});
+
+                var message = new RenameWebsiteRequest
                 {
+                    CurrentName = "MX2 Borbet-B2B Alt",
                     SiteInformation = new IisSite
                     {
                         Group = "MX2",
                         SiteName = "Borbet-B2B",
                         Domains = new List<string>(new[] { "borbet.mx-live.com", "www.borbet.mx-live.com", "shop.borbet.com" }),
+                        Version = "1.0.141",
+                        AddPictures = true
                     }
-                });
-                
+                };
+                var result = Communication.SendMessageToServer<DefaultResult, RenameWebsiteRequest>(message);
+
             }
             catch (Exception e)
             {
